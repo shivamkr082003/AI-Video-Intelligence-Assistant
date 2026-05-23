@@ -1,3 +1,15 @@
+import sys
+import types
+
+# ── PYTHON 3.13+ BYPASS FOR PYDUB (AUDIOOP MISSING FIX) ──
+# Streamlit Cloud uses Python 3.14 where audioop is removed. 
+# This mocks the module so pydub can import without throwing ModuleNotFoundError.
+if 'audioop' not in sys.modules:
+    mock_audioop = types.ModuleType('audioop')
+    mock_audioop.error = Exception
+    sys.modules['audioop'] = mock_audioop
+
+# ── NOW YOUR ORIGINAL IMPORTS CAN RUN SAFELY ──
 import html
 import os
 import re
@@ -12,6 +24,8 @@ from core.rag_engine import ask_question, build_rag_chain
 from core.summarizer import generate_title, summarize
 from core.transcriber import transcribe_all
 from utils.audio_processor import process_input
+
+# Baaki tumhara niche ka pure app.py ka code bilkul same rahega...
 
 load_dotenv()
 
