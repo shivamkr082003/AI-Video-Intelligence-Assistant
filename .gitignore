@@ -1,0 +1,46 @@
+# Virtual Environment
+.venv/
+venv/
+
+# Environment variables
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Downloads / generated files
+downloads/
+temp/
+output/
+
+# Vector DB / embeddings
+vector_db/
+chroma_db/
+*.sqlite3
+
+# Logs
+*.log
+
+# Streamlit cache
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Audio / Video generated files
+*.mp3
+*.wav
+*.mp4
+
+# Build files
+dist/
+build/
