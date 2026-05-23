@@ -6,7 +6,10 @@ DOWNLOAD_DIR = 'downloades'
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
 def download_youtube_audio(url: str) -> str:
-    output_path = os.path.join(DOWNLOAD_DIR, "%(title)s.%(ext)s")
+    # ── 🔥 FINAL FIX: HARDCODED STATIC FILENAME ──
+    # Emojis, spaces, aur special characters (||, 🔥, ✅) ka jhanjhat 
+    # khatam karne ke liye hum file ka naam fix 'youtube_audio' rakh rahe hain.
+    output_path = os.path.join(DOWNLOAD_DIR, "youtube_audio.%(ext)s")
     
     ydl_opts = {
         "format": "bestaudio/best",
@@ -21,10 +24,9 @@ def download_youtube_audio(url: str) -> str:
         "quiet": True,
         "no_warnings": True,
         
-        # ── 🔥 ADVANCED CLOUD BYPASS FOR HTTP ERROR 403 ──
+        # ── CLOUD BYPASS CONFIGS ──
         "extractor_args": {
             "youtube": {
-                # YouTube ko spoof karne ke liye official Android aur embedded web clients ka data bypass use kar rahe hain
                 "player_client": ["android", "web_embedded"],
                 "skip": ["dash", "hls"]
             }
@@ -38,9 +40,17 @@ def download_youtube_audio(url: str) -> str:
     }
     
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=True)
-        filename = ydl.prepare_filename(info).replace(".webm", ".wav").replace(".m4a", ".wav")
-    return filename
+        # Pura downloading aur post-processing (WAV conversion) yt-dlp khud sambhalega
+        ydl.download([url])
+        
+    # Kyunki filename fix hai, toh final WAV file hamesha isi path par milegi
+    final_wav_path = os.path.join(DOWNLOAD_DIR, "youtube_audio.wav")
+    
+    # Ek safety check ki file disk par generate hui ya nahi
+    if not os.path.exists(final_wav_path):
+        raise FileNotFoundError(f"Error: Final audio file could not be found at {final_wav_path}")
+        
+    return final_wav_path
 
 
 def convert_to_wav(input_path: str) -> str:
